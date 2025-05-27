@@ -1,5 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
 .App {
-  text-align: center;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+}
+
+/* Ensure the Canvas takes full size */
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
 }
 
 .App-logo {

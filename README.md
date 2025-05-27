@@ -1,46 +1,68 @@
-# Getting Started with Create React App
+# Ferro Clock
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A digital clock built with React and Three.js, featuring a 7-segment display style that replicates classic digital clock aesthetics.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Real-time digital clock display
+- Customizable colors
+- Interactive 3D environment (rotate, zoom, pan)
+- 7-segment display for each digit
+- Optional seconds display
+- Smooth animations and glowing effect
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React with TypeScript
+- Three.js for 3D rendering
+- React Three Fiber & Drei for React-Three.js integration
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Installation
 
-### `npm test`
+1. Clone this repository
+2. Navigate to the project directory
+3. Install dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+```
 
-### `npm run build`
+4. Start the development server:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. Open your browser and visit `http://localhost:3000`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Usage
 
-### `npm run eject`
+The clock will start automatically showing the current time. You can:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Rotate the view by dragging with the mouse
+- Zoom in/out using the mouse wheel
+- Pan the view by holding Shift while dragging
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Customization
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+You can customize the Clock component by modifying the props in the App.tsx file:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```tsx
+<Clock 
+  color="#ff5500"       // Change the color of the digits
+  showSeconds={true}    // Toggle seconds display
+  scale={0.8}           // Adjust the size of the clock
+  backgroundColor="#000000"  // Change the background color
+/>
+```
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+MIT
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Acknowledgements
+
+- [React](https://reactjs.org/)
+- [Three.js](https://threejs.org/)
+- [React Three Fiber](https://github.com/pmndrs/react-three-fiber)
+- [Drei](https://github.com/pmndrs/drei)
