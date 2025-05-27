@@ -1,6 +1,6 @@
 # Ferro Clock
 
-A digital clock built with React and Three.js, featuring a 7-segment display style that replicates classic digital clock aesthetics.
+A digital clock built with React and Three.js, featuring a 8-segment display style that replicates classic digital clock aesthetics.
 
 ## Features
 
