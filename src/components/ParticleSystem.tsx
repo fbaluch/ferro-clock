@@ -42,13 +42,13 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
   const getOrCreateParticles = (digitId: number) => {
     if (!particlesMap.current.has(digitId)) {
       const vertices: number[] = [];
-      // Create stable scattered positions around the segment
+      // Create more scattered initial positions for dramatic movement
       for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
-        const radius = 0.3 + Math.random() * 0.2;
-        const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.1;
-        const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.1;
-        const z = (Math.random() - 0.5) * 0.05;
+        const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+        const radius = 0.8 + Math.random() * 0.5; // Much larger initial spread
+        const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.3;
+        const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.3;
+        const z = (Math.random() - 0.5) * 0.2; // More z-axis variation
         vertices.push(x, y, z);
       }
       particlesMap.current.set(digitId, vertices);
@@ -71,15 +71,15 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
   }, [particles]);
 
   const restPositions = useRef<[number, number, number][]>([]);
-  // Initialize rest positions once
+  // Initialize rest positions once with larger scatter
   if (restPositions.current.length === 0) {
     const positions: [number, number, number][] = [];
     for (let i = 0; i < count; i++) {
-      const angle = (i / count) * Math.PI * 2;
-      const radius = 0.3 + Math.random() * 0.2;
-      const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.1;
-      const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.1;
-      const z = (Math.random() - 0.5) * 0.05;
+      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.8;
+      const radius = 0.8 + Math.random() * 0.7; // Larger rest scatter
+      const x = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.4;
+      const y = Math.sin(angle) * radius + (Math.random() - 0.5) * 0.4;
+      const z = (Math.random() - 0.5) * 0.15;
       positions.push([x, y, z]);
     }
     restPositions.current = positions;
@@ -104,11 +104,19 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
       previousActiveState.current.set(digitId, active);
       setIsAnimating((prev) => new Map(prev).set(digitId, true));
 
-      // Reset velocities for smooth transition - but much smaller
+      // Add dramatic initial velocities for visible movement
       for (let i = 0; i < count; i++) {
-        velocities[i][0] = (Math.random() - 0.5) * 0.001; // Much smaller initial velocity
-        velocities[i][1] = (Math.random() - 0.5) * 0.001;
-        velocities[i][2] = (Math.random() - 0.5) * 0.001;
+        if (active) {
+          // Particles rush toward the segment
+          velocities[i][0] = (Math.random() - 0.5) * 0.02;
+          velocities[i][1] = (Math.random() - 0.5) * 0.02;
+          velocities[i][2] = (Math.random() - 0.5) * 0.01;
+        } else {
+          // Particles scatter away from the segment
+          velocities[i][0] = (Math.random() - 0.5) * 0.03;
+          velocities[i][1] = (Math.random() - 0.5) * 0.03;
+          velocities[i][2] = (Math.random() - 0.5) * 0.015;
+        }
       }
 
       // Record the animation start time
@@ -170,19 +178,19 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
       const dz = targetZ - pz;
       const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-      if (distance > 0.005) { // Updated convergence threshold
-        needsUpdate = true; // Mark that an update is needed
+      if (distance > 0.01) { // Larger convergence threshold for longer movement
+        needsUpdate = true;
 
-        // Apply forces to move toward target
-        const force = Math.min(0.1 / (distance + 0.01), maxForce);
+        // Stronger forces for more dramatic movement
+        const force = Math.min(0.2 / (distance + 0.01), 0.08); // Increased force
         velocities[i][0] += force * dx;
         velocities[i][1] += force * dy;
         velocities[i][2] += force * dz;
 
-        // Apply damping/friction
-        velocities[i][0] *= 0.995;
-        velocities[i][1] *= 0.995;
-        velocities[i][2] *= 0.995;
+        // Less aggressive damping for longer movement
+        velocities[i][0] *= 0.98; // Reduced damping
+        velocities[i][1] *= 0.98;
+        velocities[i][2] *= 0.98;
 
         // Update positions
         positions[index] += velocities[i][0];
@@ -191,27 +199,26 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
       }
     }
 
+    const settlingTime = 2000; // 2 seconds for settling
     const elapsedTime = animationStartTime.current ? performance.now() - animationStartTime.current : 0;
 
-    const velocityThreshold = 0.001; // Define a velocity threshold
-
-    if (!needsUpdate && elapsedTime > 500) { // Updated elapsed time check to 500ms
-      let allVelocitiesBelowThreshold = true;
-
-      // Check if all velocities are below the threshold
+    // Don't stop animation immediately, allow for settling
+    if (!needsUpdate && elapsedTime > settlingTime) {
+      // Gradual velocity reduction for settling effect
+      let totalVelocity = 0;
       for (let i = 0; i < count; i++) {
-        const [vx, vy, vz] = velocities[i];
-        if (Math.abs(vx) > velocityThreshold || Math.abs(vy) > velocityThreshold || Math.abs(vz) > velocityThreshold) {
-          allVelocitiesBelowThreshold = false;
-          break;
-        }
+        totalVelocity += Math.abs(velocities[i][0]) + Math.abs(velocities[i][1]) + Math.abs(velocities[i][2]);
+        // Gradual velocity reduction
+        velocities[i][0] *= 0.9;
+        velocities[i][1] *= 0.9;
+        velocities[i][2] *= 0.9;
       }
 
-      if (allVelocitiesBelowThreshold) {
-        setIsAnimating((prev) => new Map(prev).set(digitId, false)); // Stop animating for this digit
-        animationStartTime.current = null; // Reset animation start time
-
-        // Reset all velocities to zero to prevent residual movement
+      // Stop when total velocity is very low
+      if (totalVelocity < 0.001) {
+        setIsAnimating((prev) => new Map(prev).set(digitId, false));
+        animationStartTime.current = null;
+        // Final velocity reset
         for (let i = 0; i < count; i++) {
           velocities[i][0] = 0;
           velocities[i][1] = 0;
@@ -238,18 +245,15 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
       }
     }
 
-    // More aggressive stopping condition
-    if (!needsUpdate || elapsedTime > 1000) {
-      setIsAnimating((prev) => new Map(prev).set(digitId, false));
-      animationStartTime.current = null;
-      // Force all velocities to zero
+    // Add slight random motion for more organic movement
+    if (needsUpdate) {
       for (let i = 0; i < count; i++) {
-        velocities[i][0] = 0;
-        velocities[i][1] = 0;
-        velocities[i][2] = 0;
+        const index = i * 3;
+        // Add subtle random motion for organic feel
+        positions[index] += (Math.random() - 0.5) * 0.002;
+        positions[index + 1] += (Math.random() - 0.5) * 0.002;
+        positions[index + 2] += (Math.random() - 0.5) * 0.001;
       }
-    } else if (needsUpdate) {
-      particlesRef.current.attributes.position.needsUpdate = true;
     }
   });
 
@@ -267,7 +271,7 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
         size={size}
         color={new Color(color)}
         transparent
-        opacity={active ? 0.8 : 0.1}
+        opacity={active ? 1.0 : 0.3} // Increased opacity for better visibility
         sizeAttenuation
       />
     </points>
