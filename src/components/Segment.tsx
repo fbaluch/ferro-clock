@@ -14,7 +14,7 @@ interface SegmentProps {
   particleCount?: number;
   particleSize?: number;
   particleSpread?: number;
-  digitId: number; // Added digitId prop
+  digitId: string; // Changed from number to string
   particleColor?: string; // New prop to specify particle color independently
   opacity?: number; // New prop to control segment opacity
 }

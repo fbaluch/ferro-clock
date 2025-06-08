@@ -67,7 +67,7 @@ const Digit: React.FC<DigitProps> = ({
           particleCount={particleCount}
           particleSize={particleSize}
           particleSpread={particleSpread}
-          digitId={`${digitPosition}-${index}` as unknown as number} // Cast to match expected type
+          digitId={`${digitPosition}-${index}`} // Remove type cast
           particleColor={color} // Pass independent particle color
         />
       ))}

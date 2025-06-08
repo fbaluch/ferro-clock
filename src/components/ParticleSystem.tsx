@@ -9,7 +9,7 @@ interface ParticleSystemProps {
   spread: number;
   active: boolean;
   position: [number, number, number];
-  digitId: number; // Unique identifier for the digit or segment
+  digitId: string; // Changed from number to string
   rotation: [number, number, number]; // Added rotation prop
   width: number; // Added width prop
   height: number; // Added height prop
@@ -34,8 +34,8 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
     if (count <= 0) return [];
     return new Array(count).fill(null).map(() => [0, 0, 0]);
   }, [count]);
-  const previousActiveState = useRef(new Map<number, boolean>());
-  const [isAnimating, setIsAnimating] = useState(new Map<number, boolean>());
+  const previousActiveState = useRef(new Map<string, boolean>());
+  const [isAnimating, setIsAnimating] = useState(new Map<string, boolean>());
 
   const particles = useRef<number[]>([]);
   if (particles.current.length === 0) {
