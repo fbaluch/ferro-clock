@@ -26,6 +26,7 @@ const Segment: React.FC<SegmentProps> = ({
           color={color}
           transparent
           opacity={active ? 0.3 : 0.1}
+          depthWrite={false}   // ← NEW: don't write to z-buffer
         />
       </mesh>
     </group>

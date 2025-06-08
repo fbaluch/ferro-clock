@@ -85,7 +85,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         <input
           type="range"
           min="0"
-          max="200"
+          max="800" // Increased from 200 to 800
           value={particleCount}
           onChange={(e) => onParticleCountChange(Number(e.target.value))}
           style={{ width: '100%', cursor: 'pointer' }}
@@ -99,13 +99,16 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>Particle Size</label>
         <input
           type="range"
-          min="0.01"
-          max="0.1"
-          step="0.01"
+          min="0.1"
+          max="1.0"  // Keeping max at 1.0
+          step="0.1"
           value={particleSize}
           onChange={(e) => onParticleSizeChange(Number(e.target.value))}
           style={{ width: '100%', cursor: 'pointer' }}
         />
+        <div style={{ textAlign: 'center', marginTop: '5px', fontSize: '12px', color: '#aaa' }}>
+          {particleSize}
+        </div>
       </div>
 
       <div>

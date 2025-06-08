@@ -25,9 +25,9 @@ const Digit: React.FC<DigitProps> = ({
   color,
   scale,
   showSegments,
-  particleCount = 100,
+  particleCount = 400,      // 400-ish gives ~65 filings per bar on "0"
   particleSize = 0.05,
-  particleSpread = 2,
+  particleSpread = 0.6,     // start much closer to the digit
   digitPosition
 }) => {
   // Define segment configurations
