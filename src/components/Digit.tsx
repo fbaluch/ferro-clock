@@ -1,5 +1,6 @@
 import React from 'react';
 import Segment from './Segment';
+import DigitParticleSystem from './DigitParticleSystem';
 
 interface DigitProps {
   value: number;
@@ -24,9 +25,9 @@ const Digit: React.FC<DigitProps> = ({
   color,
   scale,
   showSegments,
-  particleCount,
-  particleSize,
-  particleSpread,
+  particleCount = 100,
+  particleSize = 0.05,
+  particleSpread = 2,
   digitPosition
 }) => {
   // Define segment configurations
@@ -54,6 +55,8 @@ const Digit: React.FC<DigitProps> = ({
     [0, 1, 2, 3, 5, 6]     // 9
   ];
 
+  const activeSegments = segmentMap[value];
+
   return (
     <group position={position} scale={[scale, scale, scale]}>
       {segmentConfigs.map((config, index) => (
@@ -61,16 +64,22 @@ const Digit: React.FC<DigitProps> = ({
           key={`${digitPosition}-${index}`}
           position={config.position}
           rotation={config.rotation}
-          active={segmentMap[value].includes(index)}
-          isDigitActive={segmentMap[value].includes(index)}
+          active={activeSegments.includes(index)}
           color={color}
-          particleCount={particleCount}
-          particleSize={particleSize}
-          particleSpread={particleSpread}
-          digitId={`${digitPosition}-${index}`} // Remove type cast
-          particleColor={color} // Pass independent particle color
+          isDigitActive={showSegments}  // Pass showSegments as isDigitActive
+          digitId={`${digitPosition}-${index}`}  // Use same format as key
         />
       ))}
+      
+      <DigitParticleSystem
+        color={color}
+        particleCount={particleCount}
+        particleSize={particleSize}
+        particleSpread={particleSpread}
+        activeSegments={activeSegments}
+        segmentConfigs={segmentConfigs}
+        digitPosition={digitPosition}
+      />
     </group>
   );
 };

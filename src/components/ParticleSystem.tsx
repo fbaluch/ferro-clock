@@ -97,46 +97,50 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({
   }, [active, digitId, count]);
 
   useFrame(() => {
-    if (!particlesRef.current || !isAnimating.get(digitId)) return; // Early return for performance
+    if (!particlesRef.current || !isAnimating.get(digitId)) return;
 
     const positions = particlesRef.current.attributes.position.array as Float32Array;
-    let needsUpdate = false; // Track if any particle needs an update
+    let needsUpdate = false;
+
+    // Segment centre in local coords
+    const centre = [position[0], position[1], position[2]];
 
     for (let i = 0; i < count; i++) {
-      const index = i * 3;
-      const px = positions[index];
-      const py = positions[index + 1];
-      const pz = positions[index + 2];
+        const index = i * 3;
+        const px = positions[index];
+        const py = positions[index + 1];
+        const pz = positions[index + 2];
 
-      const targetX = active ? 0 : restPositions.current[i][0];
-      const targetY = active ? 0 : restPositions.current[i][1];
-      const targetZ = active ? 0 : restPositions.current[i][2];
+        // If active, head towards segment centre; else towards rest position
+        const targetX = active ? centre[0] : restPositions.current[i][0];
+        const targetY = active ? centre[1] : restPositions.current[i][1];
+        const targetZ = active ? centre[2] : restPositions.current[i][2];
 
-      // Calculate distance to target
-      const dx = targetX - px;
-      const dy = targetY - py;
-      const dz = targetZ - pz;
-      const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        // Calculate distance to target
+        const dx = targetX - px;
+        const dy = targetY - py;
+        const dz = targetZ - pz;
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-      if (distance > 0.01) { // Convergence threshold
-        needsUpdate = true; // Mark that an update is needed
+        if (distance > 0.01) { // Convergence threshold
+          needsUpdate = true; // Mark that an update is needed
 
-        // Apply forces to move toward target
-        const force = Math.min(0.1 / (distance + 0.01), maxForce);
-        velocities[i][0] += force * dx;
-        velocities[i][1] += force * dy;
-        velocities[i][2] += force * dz;
+          // Apply forces to move toward target
+          const force = Math.min(0.1 / (distance + 0.01), maxForce);
+          velocities[i][0] += force * dx;
+          velocities[i][1] += force * dy;
+          velocities[i][2] += force * dz;
 
-        // Apply damping/friction
-        velocities[i][0] *= 0.99;
-        velocities[i][1] *= 0.99;
-        velocities[i][2] *= 0.99;
+          // Apply damping/friction
+          velocities[i][0] *= 0.99;
+          velocities[i][1] *= 0.99;
+          velocities[i][2] *= 0.99;
 
-        // Update positions
-        positions[index] += velocities[i][0];
-        positions[index + 1] += velocities[i][1];
-        positions[index + 2] += velocities[i][2];
-      }
+          // Update positions
+          positions[index] += velocities[i][0];
+          positions[index + 1] += velocities[i][1];
+          positions[index + 2] += velocities[i][2];
+        }
     }
 
     if (needsUpdate) {
