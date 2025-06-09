@@ -1,6 +1,7 @@
 {
   "name": "ferro-clock",
   "version": "0.1.0",
+  "homepage": "https://fbaluch.github.io/ferro-clock",
   "private": true,
   "dependencies": {
     "@react-three/drei": "^10.0.4",
