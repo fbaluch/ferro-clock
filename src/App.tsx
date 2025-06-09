@@ -8,9 +8,9 @@ import { ClockPropsDebug as ClockProps } from './types/clock_debug';
 function App() {
   const [color, setColor] = useState('#ff5500');
   const [scale, setScale] = useState(1);
-  const [particleCount, setParticleCount] = useState(50);
-  const [particleSize, setParticleSize] = useState(0.02);
-  const [particleSpread, setParticleSpread] = useState(0.2);
+  const [particleCount, setParticleCount] = useState(400);   // Updated to match default
+  const [particleSize, setParticleSize] = useState(0.08);    // Updated to match default
+  const [particleSpread, setParticleSpread] = useState(0.6); // Updated to match default
   const [activatedSegmentOpacity, setActivatedSegmentOpacity] = useState(0.15);
 
   return (

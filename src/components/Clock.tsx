@@ -2,13 +2,22 @@ import React, { useState, useEffect } from 'react';
 import Digit from './Digit';
 import { ClockPropsDebug as ClockProps } from '../types/clock_debug';
 
+// Add spacing constants
+const DIGIT_SPACING = 0.8;      // Space between digits in a group
+const GROUP_SPACING = 2.0;      // Space between groups (hours:minutes:seconds)
+const COLON_OFFSET = 0.3;       // Slight offset for colons
+
+// Add default particle settings
+const DEFAULT_PARTICLE_COUNT = 400;
+const DEFAULT_PARTICLE_SIZE = 0.08;
+
 const Clock = ({
   color,
   scale,
   showSegments,
-  particleCount,
-  particleSize,
-  particleSpread
+  particleCount = DEFAULT_PARTICLE_COUNT,
+  particleSize = DEFAULT_PARTICLE_SIZE,
+  particleSpread = 0.6
 }: ClockProps) => {
   const [time, setTime] = useState<[number, number, number]>([0, 0, 0]);
 
@@ -27,7 +36,8 @@ const Clock = ({
   }, []);
 
   return (
-    <group scale={[scale, scale, scale]}>
+    <group>
+      {/* Hours */}
       <Digit
         digitPosition="hours1"
         value={Math.floor(time[0] / 10)}
@@ -50,6 +60,20 @@ const Clock = ({
         particleSize={particleSize}
         particleSpread={particleSpread}
       />
+
+      {/* Colon between hours and minutes */}
+      <group position={[-GROUP_SPACING/2 + COLON_OFFSET, 0, 0]}>
+        <mesh position={[0, 0.5, 0]}>
+          <sphereGeometry args={[0.1, 16, 16]} />
+          <meshStandardMaterial color={color} opacity={0.5} transparent />
+        </mesh>
+        <mesh position={[0, -0.5, 0]}>
+          <sphereGeometry args={[0.1, 16, 16]} />
+          <meshStandardMaterial color={color} opacity={0.5} transparent />
+        </mesh>
+      </group>
+
+      {/* Minutes */}
       <Digit
         digitPosition="minutes1"
         value={Math.floor(time[1] / 10)}
@@ -72,6 +96,20 @@ const Clock = ({
         particleSize={particleSize}
         particleSpread={particleSpread}
       />
+
+      {/* Colon between minutes and seconds */}
+      <group position={[GROUP_SPACING/2 - COLON_OFFSET, 0, 0]}>
+        <mesh position={[0, 0.5, 0]}>
+          <sphereGeometry args={[0.1, 16, 16]} />
+          <meshStandardMaterial color={color} opacity={0.5} transparent />
+        </mesh>
+        <mesh position={[0, -0.5, 0]}>
+          <sphereGeometry args={[0.1, 16, 16]} />
+          <meshStandardMaterial color={color} opacity={0.5} transparent />
+        </mesh>
+      </group>
+
+      {/* Seconds */}
       <Digit
         digitPosition="seconds1"
         value={Math.floor(time[2] / 10)}

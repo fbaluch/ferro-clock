@@ -99,9 +99,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>Particle Size</label>
         <input
           type="range"
-          min="0.1"
-          max="1.0"  // Keeping max at 1.0
-          step="0.1"
+          min="0.001"
+          max="0.5"  // Keeping max at 1.0
+          step="0.005"
           value={particleSize}
           onChange={(e) => onParticleSizeChange(Number(e.target.value))}
           style={{ width: '100%', cursor: 'pointer' }}
