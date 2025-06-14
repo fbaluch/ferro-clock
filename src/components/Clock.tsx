@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Digit from './Digit';
 import { ClockPropsDebug as ClockProps } from '../types/clock_debug';
 
-// Add spacing constants
+// Adjust spacing constants
 const DIGIT_SPACING = 0.8;      // Space between digits in a group
 const GROUP_SPACING = 2.0;      // Space between groups (hours:minutes:seconds)
 const COLON_OFFSET = 0.3;       // Slight offset for colons
@@ -41,9 +41,9 @@ const Clock = ({
       <Digit
         digitPosition="hours1"
         value={Math.floor(time[0] / 10)}
-        position={[-3, 0, 0]} // Increased spacing for hours
+        position={[-DIGIT_SPACING - GROUP_SPACING, 0, 0]}
         color={color}
-        scale={1}
+        scale={scale}
         showSegments={showSegments}
         particleCount={particleCount}
         particleSize={particleSize}
@@ -52,24 +52,24 @@ const Clock = ({
       <Digit
         digitPosition="hours2"
         value={time[0] % 10}
-        position={[-1.5, 0, 0]} // Increased spacing for hours
+        position={[-GROUP_SPACING, 0, 0]}
         color={color}
-        scale={1}
+        scale={scale}
         showSegments={showSegments}
         particleCount={particleCount}
         particleSize={particleSize}
         particleSpread={particleSpread}
       />
 
-      {/* Colon between hours and minutes */}
-      <group position={[-GROUP_SPACING/2 + COLON_OFFSET, 0, 0]}>
-        <mesh position={[0, 0.5, 0]}>
-          <sphereGeometry args={[0.1, 16, 16]} />
-          <meshStandardMaterial color={color} opacity={0.5} transparent />
+      {/* First colon (between hours and minutes) */}
+      <group position={[-GROUP_SPACING/2, 0, 0]}>
+        <mesh position={[0, 0.3, 0]}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial color={color} transparent depthWrite={false} />
         </mesh>
-        <mesh position={[0, -0.5, 0]}>
-          <sphereGeometry args={[0.1, 16, 16]} />
-          <meshStandardMaterial color={color} opacity={0.5} transparent />
+        <mesh position={[0, -0.3, 0]}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial color={color} transparent depthWrite={false} />
         </mesh>
       </group>
 
@@ -77,9 +77,9 @@ const Clock = ({
       <Digit
         digitPosition="minutes1"
         value={Math.floor(time[1] / 10)}
-        position={[0.5, 0, 0]} // Increased spacing between hours and minutes
+        position={[-DIGIT_SPACING, 0, 0]}
         color={color}
-        scale={1}
+        scale={scale}
         showSegments={showSegments}
         particleCount={particleCount}
         particleSize={particleSize}
@@ -88,24 +88,24 @@ const Clock = ({
       <Digit
         digitPosition="minutes2"
         value={time[1] % 10}
-        position={[2, 0, 0]} // Increased spacing for minutes
+        position={[0, 0, 0]}
         color={color}
-        scale={1}
+        scale={scale}
         showSegments={showSegments}
         particleCount={particleCount}
         particleSize={particleSize}
         particleSpread={particleSpread}
       />
 
-      {/* Colon between minutes and seconds */}
-      <group position={[GROUP_SPACING/2 - COLON_OFFSET, 0, 0]}>
-        <mesh position={[0, 0.5, 0]}>
-          <sphereGeometry args={[0.1, 16, 16]} />
-          <meshStandardMaterial color={color} opacity={0.5} transparent />
+      {/* Second colon (between minutes and seconds) */}
+      <group position={[GROUP_SPACING/2, 0, 0]}>
+        <mesh position={[0, 0.3, 0]}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial color={color} transparent depthWrite={false} />
         </mesh>
-        <mesh position={[0, -0.5, 0]}>
-          <sphereGeometry args={[0.1, 16, 16]} />
-          <meshStandardMaterial color={color} opacity={0.5} transparent />
+        <mesh position={[0, -0.3, 0]}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial color={color} transparent depthWrite={false} />
         </mesh>
       </group>
 
@@ -113,9 +113,9 @@ const Clock = ({
       <Digit
         digitPosition="seconds1"
         value={Math.floor(time[2] / 10)}
-        position={[3.5, 0, 0]} // Increased spacing between minutes and seconds
+        position={[GROUP_SPACING, 0, 0]}
         color={color}
-        scale={1}
+        scale={scale}
         showSegments={showSegments}
         particleCount={particleCount}
         particleSize={particleSize}
@@ -124,9 +124,9 @@ const Clock = ({
       <Digit
         digitPosition="seconds2"
         value={time[2] % 10}
-        position={[5, 0, 0]} // Increased spacing for seconds
+        position={[GROUP_SPACING + DIGIT_SPACING, 0, 0]}
         color={color}
-        scale={1}
+        scale={scale}
         showSegments={showSegments}
         particleCount={particleCount}
         particleSize={particleSize}

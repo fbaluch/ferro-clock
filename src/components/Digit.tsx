@@ -19,6 +19,9 @@ interface SegmentConfig {
   rotation: [number, number, number];
 }
 
+const SEG_LEN = 0.8;
+const VERT_OFFSET = SEG_LEN / 2; // 0.4
+
 const Digit: React.FC<DigitProps> = ({
   value,
   position,
@@ -32,13 +35,13 @@ const Digit: React.FC<DigitProps> = ({
 }) => {
   // Define segment configurations
   const segmentConfigs: SegmentConfig[] = [
-    { position: [0, 1, 0], rotation: [0, 0, 0] },           // A - Top
-    { position: [0.325, 0.5, 0], rotation: [0, 0, Math.PI / 2] },  // B - Top Right
-    { position: [0.325, -0.5, 0], rotation: [0, 0, Math.PI / 2] }, // C - Bottom Right
-    { position: [0, -1, 0], rotation: [0, 0, 0] },          // D - Bottom
-    { position: [-0.325, -0.5, 0], rotation: [0, 0, Math.PI / 2] }, // E - Bottom Left
-    { position: [-0.325, 0.5, 0], rotation: [0, 0, Math.PI / 2] },  // F - Top Left
-    { position: [0, 0, 0], rotation: [0, 0, 0] }            // G - Middle
+    { position: [0, 1, 0], rotation: [0, 0, 0] },                // A - Top (horizontal)
+    { position: [VERT_OFFSET, 0.5, 0], rotation: [0, 0, Math.PI/2] },  // B - Top Right (vertical)
+    { position: [VERT_OFFSET, -0.5, 0], rotation: [0, 0, Math.PI/2] }, // C - Bottom Right (vertical)
+    { position: [0, -1, 0], rotation: [0, 0, 0] },               // D - Bottom (horizontal)
+    { position: [-VERT_OFFSET, -0.5, 0], rotation: [0, 0, Math.PI/2] }, // E - Bottom Left (vertical)
+    { position: [-VERT_OFFSET, 0.5, 0], rotation: [0, 0, Math.PI/2] },  // F - Top Left (vertical)
+    { position: [0, 0, 0], rotation: [0, 0, 0] }                 // G - Middle (horizontal)
   ];
 
   // Define which segments are active for each number (0-9)
@@ -58,7 +61,7 @@ const Digit: React.FC<DigitProps> = ({
   const activeSegments = segmentMap[value];
 
   return (
-    <group position={position} scale={[scale, scale, scale]}>
+    <group position={position}>
       {segmentConfigs.map((config, index) => (
         <Segment
           key={`${digitPosition}-${index}`}
@@ -66,8 +69,8 @@ const Digit: React.FC<DigitProps> = ({
           rotation={config.rotation}
           active={activeSegments.includes(index)}
           color={color}
-          isDigitActive={showSegments}  // Pass showSegments as isDigitActive
-          digitId={`${digitPosition}-${index}`}  // Use same format as key
+          isDigitActive={showSegments}
+          digitId={`${digitPosition}-${index}`}
         />
       ))}
       
